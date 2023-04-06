@@ -5,7 +5,7 @@ import wixLocation from 'wix-location';
 $w.onReady(function () {
 
 /**********************************
-* 	   		SIGN UP
+* 	   SIGN UP
  *********************************/
  $w('#submitButton').onClick( () => {
 	 if( $w('#fName').valid && $w('#lName').valid && $w('#email').valid && $w('#password').valid) {
@@ -27,9 +27,9 @@ async function registerPerson() {
 	}
 	await authentication.register(email, password, options)
 	    .then((result)=>{
-			//this function is same if u manual connect input to dataset os 1st is key 2nd is value
+			
 			$w('#dataset1').setFieldValue('email', email)
-			// now you can save since you don't connect input form field manually
+			
 			$w('#dataset1').save()
 			.then((item) => {
 				wixLocation.to('/account/my-account/member-home');
@@ -43,7 +43,7 @@ async function registerPerson() {
  });//submit
 
 /*******************************
- * 	CHECK IF MEMBER LOGIN
+ * CHECK IF MEMBER LOGIN
 ********************************/
 
   const isLoggedIn = authentication.loggedIn();
@@ -57,7 +57,7 @@ async function registerPerson() {
     console.log("an error occured");
   }
 /******************************
- * 			LOGIN
+ * 	LOGIN
 ****************************** */
 
 $w('#loginButton').onClick( () =>{
