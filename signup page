@@ -1,0 +1,95 @@
+import { authentication,currentMember } from 'wix-members';
+import wixLocation from 'wix-location';
+
+
+$w.onReady(function () {
+
+/**********************************
+* 	   		SIGN UP
+ *********************************/
+ $w('#submitButton').onClick( () => {
+	 if( $w('#fName').valid && $w('#lName').valid && $w('#email').valid && $w('#password').valid) {
+		 registerPerson()
+	 }else{
+		 console.log('An error occured')
+	 }
+async function registerPerson() {
+	const firstName = $w('#fName').value;
+	const lastName = $w('#lName').value;
+	const email = $w('#email').value;
+	const password = $w('#password').value;
+
+	const options = {
+		contactInfo: {
+			"firstName": firstName,
+			"lastName": lastName,
+		}
+	}
+	await authentication.register(email, password, options)
+	    .then((result)=>{
+			//this function is same if u manual connect input to dataset os 1st is key 2nd is value
+			$w('#dataset1').setFieldValue('email', email)
+			// now you can save since you don't connect input form field manually
+			$w('#dataset1').save()
+			.then((item) => {
+				wixLocation.to('/account/my-account/member-home');
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+		})
+}
+
+ });//submit
+
+/*******************************
+ * 	CHECK IF MEMBER LOGIN
+********************************/
+
+  const isLoggedIn = authentication.loggedIn();
+
+  if (isLoggedIn) {
+    const loggedInMember = currentMember.getMember();
+    console.log('Member is logged in:', loggedInMember);
+	wixLocation.to('/account/my-account/member-home');
+
+  } else {
+    console.log("an error occured");
+  }
+/******************************
+ * 			LOGIN
+****************************** */
+
+$w('#loginButton').onClick( () =>{
+	loginPerson()
+})
+
+async function loginPerson() {
+	const email = $w('#logEmail').value;
+	const password = $w('#logPassword').value;
+	try{
+		await authentication.login(email, password)
+		wixLocation.to('/account/my-account/member-home');
+		    
+	}catch(error) {
+		console.log(error);
+	}
+}
+
+/***************************
+ * 	PASSWORD RESET
+ ****************************/
+
+$w('#forgotPassword').onClick( (event) => {
+	authentication.promptForgotPassword()
+	  .then(() => {
+    console.log('Sending "forgot password" email');
+  })
+  .catch((error) => {
+    console.error(error);
+  });
+})
+
+
+
+});//onReady
